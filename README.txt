@@ -54,10 +54,15 @@ FILE LIST
   Expiry-Kit-Preview.html -> browser preview
 
 ========================================
+CLASS NAME (unique, Voidstack ke saath safe):
+  Lcom/expirykit/update/ExpiryKit;
+  Dex: Lcom/expirykit/update/ExpiryKit;->attach(Landroid/content/Context;)V
+
+========================================
 REMOTE TRIGGER — 30 DIN BAAD / NAYA VERSION
 ========================================
 
-latest.txt abhi "1" hai -> dialog OFF (tak tak jab tak app ka
+latest.txt abhi (repo me =1) "1" hai -> dialog OFF (tak tak jab tak app ka
 versionCode < latest.txt number hai).
 
 JAB TRIGGER KARNA HO (naya version release kiya):

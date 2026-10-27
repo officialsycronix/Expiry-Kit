@@ -1,50 +1,65 @@
 EXPIRY-Kit — MT Manager se inject (6 steps)
 ============================================
 
+CLASS NAME (unique — Voidstack ke saath conflict NAHI):
+  Lcom/expirykit/update/ExpiryKit;
+
 STEP 1 — VERSION_URL set (sirf pehli baar / update ke time)
 ----------------------------------------------------------------
-ModKit.java me:
-  public static String VERSION_URL = "https://example.com/latest.txt";
+ExpiryKit.java me:
+  public static String VERSION_URL = "https://raw.githubusercontent.com/officialsycronix/Expiry-Kit/main/latest.txt";
 
-Iski jagah apna GIST RAW URL daalo (file me sirf versionCode number ho).
-Phir dex rebuild (ya ready files use karo).
+Gist/raw text URL jisme sirf versionCode number ho. Edit → rebuild dex.
 
 STEP 2 — Dex count
 ------------------
-APK → View → kaunse classes*.dex hain?
-Sabse bada number → naya dex = next number.
+APK → View → kaunse classes*.dex hain? Sabse bada number → naya dex = next number.
+(rename: classes10.dex, classes11.dex... jo free ho)
 
 STEP 3 — Logo + dex add
 ------------------------
-  assets/ → modkit_logo.jpg
+  assets/ → modkit_logo.jpg   (agar pehle se hai to SKIP)
   root → classesN.dex (next number)
 
-STEP 4 — Smali 1 line (koi EK)
--------------------------------
+STEP 4 — Smali 1 line (koi EK — Application ya Activity)
+--------------------------------------------------------
 Application:
-  invoke-static {p0}, Lcom/voidstack/modkit/ModKit;->install(Landroid/app/Application;)V
+  invoke-static {p0}, Lcom/expirykit/update/ExpiryKit;->install(Landroid/app/Application;)V
 
-Activity:
-  invoke-static {p0}, Lcom/voidstack/modkit/ModKit;->show(Landroid/app/Activity;)V
+Activity (safe — dono alag):
+  invoke-static {p0}, Lcom/expirykit/update/ExpiryKit;->attach(Landroid/content/Context;)V
 
-Safe (dono):
-  invoke-static {p0}, Lcom/voidstack/modkit/ModKit;->attach(Landroid/content/Context;)V
-
-.locals/.registers MAT badlo.
+.locals/.registers MAT badlo (agar naya parameter add ho raha ho).
 
 STEP 5 — Sign + install
 -----------------------
-Sign (apna keystore) → purana uninstall → naya install.
+Sign → purana uninstall → naya install.
+
+========================================
+DUAL DIALOG (startup + update ek saath)
+========================================
+Voidstack ModKit (startup) ka class:
+  Lcom/voidstack/modkit/ModKit;      ← unchanged, koi conflict nahi
+
+Expiry-Kit (update) ka class:
+  Lcom/expirykit/update/ExpiryKit;   ← unique
+
+Dono ek hi onCreate me chal sakte hain — 2 alag invoke-static lines:
+  invoke-static {p0}, Lcom/voidstack/modkit/ModKit;->install(...)   <- startup
+  invoke-static {p0}, Lcom/expirykit/update/ExpiryKit;->attach(...) <- update
+
+Dex dono ka alag number pe (jaise classes9 = voidstack, classes10 = expiry).
+Logo same assets/modkit_logo.jpg use kar sakte dono (file ek hi).
 
 ========================================
 DIALOG KAB DIKHEGA:
 ========================================
   latest.txt number  >  app ka versionCode  → FORCED dialog
-  latest.txt number <= app ka versionCode   → normal app
-  offline / fetch fail                       → normal app (blocked nahi)
+  latest.txt number <= app ka versionCode   → normal
+  offline / fetch fail                       → normal (block nahi)
   latest.txt = "0"                           → kabhi nahi
 
 NAYA RELEASE:
   1. Naya APK banao
-  2. gist latest.txt me versionCode BADAL DO
-  3. Purane apps me dialog ON ✅ — user Update Now → channel → naya version
+  2. github latest.txt me versionCode BADAL DO (badha ke, base64)
+  3. Purane apps me dialog ON — Update Now → channel → naya version

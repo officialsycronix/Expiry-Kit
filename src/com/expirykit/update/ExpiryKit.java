@@ -1,4 +1,4 @@
-package com.voidstack.modkit;
+package com.expirykit.update;
 
 import android.app.Activity;
 import android.app.Application;
@@ -49,16 +49,16 @@ import java.lang.ref.WeakReference;
  *  INJECT (smali me ek line):
  *
  *    Application.onCreate()V:
- *      invoke-static {p0}, Lcom/voidstack/modkit/ModKit;->install(Landroid/app/Application;)V
+ *      invoke-static {p0}, Lcom/expirykit/update/ExpiryKit;->install(Landroid/app/Application;)V
  *
  *    Activity.onCreate()V:
- *      invoke-static {p0}, Lcom/voidstack/modkit/ModKit;->show(Landroid/app/Activity;)V
+ *      invoke-static {p0}, Lcom/expirykit/update/ExpiryKit;->show(Landroid/app/Activity;)V
  *
  *    Confusion ho to (dono handle karta hai):
- *      invoke-static {p0}, Lcom/voidstack/modkit/ModKit;->attach(Landroid/content/Context;)V
+ *      invoke-static {p0}, Lcom/expirykit/update/ExpiryKit;->attach(Landroid/content/Context;)V
  * ========================================================================== */
 
-public final class ModKit {
+public final class ExpiryKit {
 
     // ======================================================================
     //  CONFIG  —  sirf yahan edit karo
@@ -233,7 +233,7 @@ public final class ModKit {
 
     static void onDialogClosed() { sShowing = false; }
 
-    private ModKit() { }
+    private ExpiryKit() { }
 
     // ======================================================================
     //  UI  —  single screen, forced (non-dismissable)
@@ -262,7 +262,7 @@ public final class ModKit {
 
         static void show(Activity a) {
             if (a == null) return;
-            try { new Ui(a).build(); } catch (Throwable t) { ModKit.onDialogClosed(); }
+            try { new Ui(a).build(); } catch (Throwable t) { ExpiryKit.onDialogClosed(); }
         }
 
         private void build() {
@@ -300,7 +300,7 @@ public final class ModKit {
 
             dialog.setContentView(root);
             dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                public void onDismiss(DialogInterface d) { ModKit.onDialogClosed(); }
+                public void onDismiss(DialogInterface d) { ExpiryKit.onDialogClosed(); }
             });
             dialog.show();
 
