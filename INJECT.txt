@@ -1,0 +1,50 @@
+EXPIRY-Kit — MT Manager se inject (6 steps)
+============================================
+
+STEP 1 — VERSION_URL set (sirf pehli baar / update ke time)
+----------------------------------------------------------------
+ModKit.java me:
+  public static String VERSION_URL = "https://example.com/latest.txt";
+
+Iski jagah apna GIST RAW URL daalo (file me sirf versionCode number ho).
+Phir dex rebuild (ya ready files use karo).
+
+STEP 2 — Dex count
+------------------
+APK → View → kaunse classes*.dex hain?
+Sabse bada number → naya dex = next number.
+
+STEP 3 — Logo + dex add
+------------------------
+  assets/ → modkit_logo.jpg
+  root → classesN.dex (next number)
+
+STEP 4 — Smali 1 line (koi EK)
+-------------------------------
+Application:
+  invoke-static {p0}, Lcom/voidstack/modkit/ModKit;->install(Landroid/app/Application;)V
+
+Activity:
+  invoke-static {p0}, Lcom/voidstack/modkit/ModKit;->show(Landroid/app/Activity;)V
+
+Safe (dono):
+  invoke-static {p0}, Lcom/voidstack/modkit/ModKit;->attach(Landroid/content/Context;)V
+
+.locals/.registers MAT badlo.
+
+STEP 5 — Sign + install
+-----------------------
+Sign (apna keystore) → purana uninstall → naya install.
+
+========================================
+DIALOG KAB DIKHEGA:
+========================================
+  latest.txt number  >  app ka versionCode  → FORCED dialog
+  latest.txt number <= app ka versionCode   → normal app
+  offline / fetch fail                       → normal app (blocked nahi)
+  latest.txt = "0"                           → kabhi nahi
+
+NAYA RELEASE:
+  1. Naya APK banao
+  2. gist latest.txt me versionCode BADAL DO
+  3. Purane apps me dialog ON ✅ — user Update Now → channel → naya version
