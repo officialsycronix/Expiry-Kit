@@ -49,8 +49,14 @@ def bar(pct: int, width: int = 12) -> str:
 
 
 def main() -> int:
-    root = os.path.dirname(os.path.abspath(__file__))
-    os.chdir(root)
+    # script chaho repo folder se chalao ya kahin se — khud repo dhundh lega
+    here = os.path.dirname(os.path.abspath(__file__))
+    repo = here if os.path.isdir(os.path.join(here, ".git")) else \
+        "/data/data/com.termux/files/tmp/opencode/Expiry-Kit"
+    if not os.path.isdir(os.path.join(repo, ".git")):
+        print("error: Expiry-Kit repo nahi mila")
+        return 1
+    os.chdir(repo)
 
     try:
         sh("git", "fetch", "-q", "origin", "main")
