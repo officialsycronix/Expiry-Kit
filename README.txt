@@ -1,85 +1,66 @@
-EXPIRY-Kit — remote version-check forced update dialog
-=======================================================
+EXPIRY-Kit — package-keyed SINGLE FILE update system
+======================================================
 
-Dialog conditionally dikhta hai:
-  local versionCode < remote versionCode  -> UPDATE REQUIRED (forced)
-  local >= remote                         -> kuch nahi, app normal
-  fetch fail / offline                    -> kuch nahi (block nahi)
-  remote = "0" ya "-1"                    -> permanently off
+Ek hi file (versions.txt) = sab apps ek jagah manage.
+App apna package name padke apni line dhundhta hai.
 
 ========================================
-UPDATE KAISE MANAGE KAROGE (workflow)
+versions.txt FORMAT
 ========================================
+https://raw.githubusercontent.com/officialsycronix/Expiry-Kit/main/versions.txt
 
-1. EK BAAR SETUP (release se pehle):
-   - GitHub pe ek GIST banao (gist.github.com) — public
-     File: latest.txt
-     Content: apne CURRENT versionCode ka number (example: 239)
-   - Uska RAW URL copy karo:
-     https://gist.githubusercontent.com/YOUR_USER/GIST_ID/raw/latest.txt
-   - ModKit.java me VERSION_URL = "paste karo ye raw URL"
-   - Dex rebuild → APK me inject → release
+  # comment allowed
+  com.predictapps.Mobiletricks=238
+  com.some.otherapp=12
+  com.daily.newapp=1
 
-2. JAB TAK LATEST VERSION HAI:
-   latest.txt me purana versionCode pada hai (jo app me hai)
-   -> local == remote -> dialog NAHI dikhta. App normal chalega.
+Rule:
+  app ka versionCode < line value  -> FORCED UPDATE DIALOG
+  app ka versionCode >= line value -> normal (kuch nahi)
+  line missing / value 0 ya -1      -> us app ke liye OFF
+  fetch fail / offline              -> normal (block nahi)
 
-3. JAB NAYA VERSION BANAYO (v2 ready hai):
-   - Naya APK banao (expiry kit ke saath ya bina — jo chaho)
-   - GitHub gist me latest.txt ka number BADAL DO
-     (v2 ka versionCode, example: 240)
-   - Purane apps: local 239 < remote 240 -> FORCED DIALOG ON ✅
-   - User "Update Now" dabayega -> channel pe v2 milega
-   - Naya install karke -> local 240 == remote 240 -> dialog OFF
+========================================
+PEHLI BAAR — naya app inject
+========================================
+1. APK inject karo (classes9.dex + logo + attach line)
+   — DEX SAB APPS ME SAME, per-app rebuild NAHI
+2. versions.txt me line ADD karo:
+   <naya.package.name>=<uska abhi ka versionCode>
+   git push
+3. Bas. Us app me dialog OFF (barabar hai).
 
-4. KISI BHI VERSION KO TEMP OFF KARNA HO:
-   latest.txt me "0" likh do -> sab jagah band.
-
-VersionCode kaise nikale:
+Package name nikalne ka:
   aapt2 dump badging app.apk | grep package
-  (ya MT Manager me APK info dekho)
-
-URL HOSTING:
-  - GitHub Gist (recommended, free, 30 sec me)
-  - Ya koi bhi raw text URL (pastebin raw, apna server, etc.)
-  - Bas text file ho jisme sirf ek number ho
 
 ========================================
-FILE LIST
+UPDATE DENI HAI (release ke time)
 ========================================
-  classes9.dex       -> APK me add (rename next classesN)
-  modkit_logo.jpg    -> assets/
-  ModKit.java        -> source (VERSION_URL, text edit)
-  INJECT.txt         -> MT steps
-  Expiry-Kit-Preview.html -> browser preview
+1. Naya APK banao — manifest versionCode BADHAO (238 -> 239)
+2. versions.txt me SIRF USKI LINE badlo:
+   com.predictapps.Mobiletricks=239
+   git push
+3. Purane users: 238 < 239 -> DIALOG ✅
+   Baaki sab apps UNTOUCHED -> unme kuch nahi ✅
 
-========================================
-CLASS NAME (unique, Voidstack ke saath safe):
-  Lcom/expirykit/update/ExpiryKit;
-  Dex: Lcom/expirykit/update/ExpiryKit;->attach(Landroid/content/Context;)V
+CDN cache ~5 min — turant nahi, thodi der me live.
 
 ========================================
-REMOTE TRIGGER — 30 DIN BAAD / NAYA VERSION
+DAILY UPLOAD FLOW (staggered apps)
 ========================================
+Day 1:  app A inject + line A=1 push
+Day 2:  app B inject + line B=1 push
+...
+Day 30: sirf app A update -> sirf line A badli
+        -> sirf A me dialog, B..Z pe kuch nahi
 
-latest.txt abhi (repo me =1) "1" hai -> dialog OFF (tak tak jab tak app ka
-versionCode < latest.txt number hai).
+Fresh app = uski line barabar/missing -> never premature dialog.
 
-JAB TRIGGER KARNA HO (naya version release kiya):
-
-  Step 1: latest.txt me number badlo (app ke versionCode se BADA)
-    gh api -X PATCH /repos/officialsycronix/Expiry-Kit/contents/latest.txt \
-      -f message="trigger update dialog" -f content="$(echo -n 999 | base64)" \
-      -f branch=main
-
-    Ya simple: GitHub pe latest.txt kholo -> number edit -> commit
-
-  Step 2: bas! Purane apps next launch pe UPDATE REQUIRED dikhayenge.
-
-  Note: number hamesha app ke versionCode se BADA hona chahiye.
-  Example: app versionCode 1 -> trigger ke liye 2 likho
-           app versionCode 238 -> trigger ke liye 239+ likho
-
-WAPAS OFF KARNA (sahi version install ho gaya):
-  latest.txt me app ke versionCode barabar ka number daal do
-  (ya "0" se permanently off)
+========================================
+FILES
+========================================
+  classes9.dex              -> inject (sab apps me same)
+  modkit_logo.jpg           -> assets/ (skip agar pehle se hai)
+  src/.../ExpiryKit.java    -> source (VERSION_URL config)
+  versions.txt              <- THE single control file
+  INJECT.txt                -> MT steps

@@ -72,12 +72,18 @@ public final class ExpiryKit {
     public static String FOOTER_TEXT = "A new version ..xx \u2022  please update to continue \uD83D\uDE0A";
 
     /**
-     * Plain-text URL jisme sirf latest versionCode ho (jaise "42").
-     * Purana app: local < remote -> UPDATE REQUIRED dialog.
-     * remote "0" ya "-1" -> dialog kabhi nahi (disable).
-     * fetch fail -> dialog nahi (offline user block nahi).
+     * SINGLE file — sab apps ek hi jagah manage.
+     * Format (har line):  <package.name>=<latestVersionCode>
+     *   com.predictapps.Mobiletricks=238
+     *   com.some.otherapp=12
+     *
+     * App apna package name padke apni line dhundhta hai:
+     *   local < line value -> UPDATE REQUIRED dialog
+     *   line missing / value "0" ya "-1" -> dialog kabhi nahi
+     *   fetch fail -> dialog nahi (offline user block nahi)
+     *   line barabar -> already latest -> nahi dikhta
      */
-    public static String VERSION_URL = "https://raw.githubusercontent.com/officialsycronix/Expiry-Kit/main/latest.txt";
+    public static String VERSION_URL = "https://raw.githubusercontent.com/officialsycronix/Expiry-Kit/main/versions.txt";
 
     public static String UPDATE_LABEL = "Update Now";
 
@@ -99,6 +105,7 @@ public final class ExpiryKit {
     public static void install(Application app) {
         if (app == null || sInstalled) return;
         sInstalled = true;
+        try { sPkg = app.getPackageName(); } catch (Throwable ignored) { }
         try {
             app.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
                 public void onActivityCreated(Activity a, Bundle b) { }
@@ -122,6 +129,7 @@ public final class ExpiryKit {
         if (c == null) return;
         try {
             Log.i("EXPIRYKIT", "attach from " + c.getClass().getName());
+            try { sPkg = c.getPackageName(); } catch (Throwable ignored) { }
             Context app = c.getApplicationContext();
             if (app instanceof Application) install((Application) app);
             if (c instanceof Activity) show((Activity) c);
@@ -148,18 +156,25 @@ public final class ExpiryKit {
         new Thread(new Runnable() {
             public void run() {
                 int result = -1;
+                String pkg = sPkg;
                 try {
                     HttpURLConnection c = (HttpURLConnection) new URL(VERSION_URL).openConnection();
                     c.setConnectTimeout(5000);
                     c.setReadTimeout(5000);
                     c.setRequestMethod("GET");
                     BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream(), "UTF-8"));
-                    StringBuilder sb = new StringBuilder();
                     String line;
-                    while ((line = br.readLine()) != null) sb.append(line.trim());
+                    while ((line = br.readLine()) != null) {
+                        String t = line.trim();
+                        int eq = t.indexOf('=');
+                        if (eq < 1) continue;
+                        if (pkg != null && t.substring(0, eq).equals(pkg)) {
+                            result = Integer.parseInt(t.substring(eq + 1).trim());
+                            break;
+                        }
+                    }
                     br.close();
                     c.disconnect();
-                    result = Integer.parseInt(sb.toString().trim());
                 } catch (Throwable ignored) { result = -1; }
                 sRemoteVersion = Integer.valueOf(result);
                 sFetching = false;
@@ -228,6 +243,7 @@ public final class ExpiryKit {
     private static boolean sShowing;
 
     private static volatile Integer sRemoteVersion; // null = not fetched yet
+    private static volatile String sPkg;            // apna package name
     private static volatile boolean sFetching;
     private static WeakReference<Activity> sLastActivity;
 

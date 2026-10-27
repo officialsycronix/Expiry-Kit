@@ -4,12 +4,17 @@ EXPIRY-Kit — MT Manager se inject (6 steps)
 CLASS NAME (unique — Voidstack ke saath conflict NAHI):
   Lcom/expirykit/update/ExpiryKit;
 
-STEP 1 — VERSION_URL set (sirf pehli baar / update ke time)
+STEP 1 — versions.txt me line (naya app inject = bas ye)
 ----------------------------------------------------------------
-ExpiryKit.java me:
-  public static String VERSION_URL = "https://raw.githubusercontent.com/officialsycronix/Expiry-Kit/main/latest.txt";
+https://github.com/officialsycronix/Expiry-Kit/blob/main/versions.txt
+me line add karo (agar naya app hai):
 
-Gist/raw text URL jisme sirf versionCode number ho. Edit → rebuild dex.
+  <package.name>=<versionCode>
+
+Dex ka VERSION_URL already set hai (sab apps me same dex chalega).
+Per-app rebuild ki zarurat NAHI.
+
+Package name: aapt2 dump badging app.apk | grep package
 
 STEP 2 — Dex count
 ------------------
@@ -52,14 +57,17 @@ Dex dono ka alag number pe (jaise classes9 = voidstack, classes10 = expiry).
 Logo same assets/modkit_logo.jpg use kar sakte dono (file ek hi).
 
 ========================================
-DIALOG KAB DIKHEGA:
+DIALOG KAB DIKHEGA (per-app independent):
 ========================================
-  latest.txt number  >  app ka versionCode  → FORCED dialog
-  latest.txt number <= app ka versionCode   → normal
-  offline / fetch fail                       → normal (block nahi)
-  latest.txt = "0"                           → kabhi nahi
+  versions.txt me uski line ka value  >  app versionCode  -> FORCED dialog
+  value <= versionCode / line missing / 0                 -> normal
+  offline                                                  -> normal (blocked nahi)
 
-NAYA RELEASE:
-  1. Naya APK banao
-  2. github latest.txt me versionCode BADAL DO (badha ke, base64)
-  3. Purane apps me dialog ON — Update Now → channel → naya version
+NAYA APP INJECT (daily flow):
+  1. dex+logo+smali inject (dex same for all apps)
+  2. versions.txt me uski line add = current versionCode  -> git push
+
+UPDATE RELEASE:
+  1. naya APK (manifest versionCode bada hua)
+  2. versions.txt me SIRF USKI LINE badlo -> git push
+  3. purane users me dialog ON, baaki apps safe
