@@ -73,9 +73,9 @@ public final class ExpiryKit {
 
     /**
      * SINGLE file — sab apps ek hi jagah manage.
-     * Format (har line):  <package.name>=<latestVersionCode>
-     *   com.predictapps.Mobiletricks=238
-     *   com.some.otherapp=12
+     * Format (har line):  <package.name>=<latestVersionCode>   # App Name
+     *   com.predictapps.Mobiletricks=238   # Device Info v2.3.8
+     *   com.some.otherapp=12               # MovieBox
      *
      * App apna package name padke apni line dhundhta hai:
      *   local < line value -> UPDATE REQUIRED dialog
@@ -169,7 +169,12 @@ public final class ExpiryKit {
                         int eq = t.indexOf('=');
                         if (eq < 1) continue;
                         if (pkg != null && t.substring(0, eq).equals(pkg)) {
-                            result = Integer.parseInt(t.substring(eq + 1).trim());
+                            // value = leading digits (inline comment ignore)
+                            // e.g.  com.x=238   # Device Info v2.3.8
+                            String v = t.substring(eq + 1).trim();
+                            int end = 0;
+                            while (end < v.length() && Character.isDigit(v.charAt(end))) end++;
+                            if (end > 0) result = Integer.parseInt(v.substring(0, end));
                             break;
                         }
                     }

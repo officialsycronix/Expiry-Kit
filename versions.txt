@@ -1,7 +1,7 @@
-# Expiry-Kit version file — ek hi file, sab apps
-# Format: <package.name>=<latestVersionCode>
-# App jiska local versionCode < ye value -> UPDATE DIALOG
-# line hatao / 0 likho -> us app ke liye OFF
-# naya app inject = bas line add karo (dex same, rebuild nahi)
+# EXPIRY-KIT — SINGLE version file (sab apps yahin)
+# Format: <package.name>=<latestVersionCode>   # App Name
+#   app ka versionCode < value  -> FORCED UPDATE DIALOG
+#   barabar / line missing / 0  -> OFF
+# Naya app = bas line add karo, Update = sirf uski line badlo
 
-com.predictapps.Mobiletricks=238
+com.predictapps.Mobiletricks=238   # Device Info v2.3.8
