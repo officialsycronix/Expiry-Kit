@@ -5,3 +5,4 @@
 # Naya app = bas line add karo, Update = sirf uski line badlo
 
 com.predictapps.Mobiletricks=238   # Device Info v2.3.8
+com.picsart.studio=993830905   # Picsart v30.9.5
