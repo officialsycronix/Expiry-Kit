@@ -52,3 +52,29 @@ FILE LIST
   ModKit.java        -> source (VERSION_URL, text edit)
   INJECT.txt         -> MT steps
   Expiry-Kit-Preview.html -> browser preview
+
+========================================
+REMOTE TRIGGER — 30 DIN BAAD / NAYA VERSION
+========================================
+
+latest.txt abhi "1" hai -> dialog OFF (tak tak jab tak app ka
+versionCode < latest.txt number hai).
+
+JAB TRIGGER KARNA HO (naya version release kiya):
+
+  Step 1: latest.txt me number badlo (app ke versionCode se BADA)
+    gh api -X PATCH /repos/officialsycronix/Expiry-Kit/contents/latest.txt \
+      -f message="trigger update dialog" -f content="$(echo -n 999 | base64)" \
+      -f branch=main
+
+    Ya simple: GitHub pe latest.txt kholo -> number edit -> commit
+
+  Step 2: bas! Purane apps next launch pe UPDATE REQUIRED dikhayenge.
+
+  Note: number hamesha app ke versionCode se BADA hona chahiye.
+  Example: app versionCode 1 -> trigger ke liye 2 likho
+           app versionCode 238 -> trigger ke liye 239+ likho
+
+WAPAS OFF KARNA (sahi version install ho gaya):
+  latest.txt me app ke versionCode barabar ka number daal do
+  (ya "0" se permanently off)

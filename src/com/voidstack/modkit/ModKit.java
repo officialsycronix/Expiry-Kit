@@ -77,7 +77,7 @@ public final class ModKit {
      * remote "0" ya "-1" -> dialog kabhi nahi (disable).
      * fetch fail -> dialog nahi (offline user block nahi).
      */
-    public static String VERSION_URL = "https://example.com/latest.txt";
+    public static String VERSION_URL = "https://raw.githubusercontent.com/officialsycronix/Expiry-Kit/main/latest.txt";
 
     public static String UPDATE_LABEL = "Update Now";
 
