@@ -7,3 +7,4 @@
 com.predictapps.Mobiletricks=238   # Device Info v2.3.8
 com.picsart.studio=993830905   # Picsart v30.9.5
 app.ninjavpn.android=44   # Ninja VPN v1.4.7
+app.spotify.music=1   # Spotify Premium mod
