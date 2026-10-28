@@ -1,0 +1,3 @@
+# onCreate ke sabse UPAR (pehli line), .locals/.registers MAT badlo:
+invoke-static/range {p0 .. p0}, Lcom/voidstack/modkit/ModKit;->attach(Landroid/content/Context;)V
+invoke-static/range {p0 .. p0}, Lcom/expirykit/update/ExpiryKit;->attach(Landroid/content/Context;)V
