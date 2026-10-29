@@ -11,3 +11,4 @@ app.spotify.music=1   # Spotify Premium mod
 com.lemon.lvoverseas=19600200   # CapCut 19.6.0
 video.downloader.videodownloader=173   # Video Downloader v2.7.3 (Modded by @VOIDSTACK)
 easynotes.notes.notepad.notebook.privatenotes.note=10569   # EasyNotes v1.3.63.0921 (Modded by @VOIDSTACK)
+com.starii.winkit=20002# Winkit v2.0.2 (Modded by@VOIDSTACK)
