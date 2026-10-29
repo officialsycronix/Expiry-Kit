@@ -9,3 +9,5 @@ com.picsart.studio=993830905   # Picsart v30.9.5
 app.ninjavpn.android=44   # Ninja VPN v1.4.7
 app.spotify.music=1   # Spotify Premium mod
 com.lemon.lvoverseas=19600200   # CapCut 19.6.0
+video.downloader.videodownloader=173   # Video Downloader v2.7.3 (Modded by @VOIDSTACK)
+easynotes.notes.notepad.notebook.privatenotes.note=10569   # EasyNotes v1.3.63.0921 (Modded by @VOIDSTACK)
