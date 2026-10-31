@@ -12,3 +12,11 @@ com.lemon.lvoverseas=19600200   # CapCut 19.6.0
 video.downloader.videodownloader=173   # Video Downloader v2.7.3 (Modded by @VOIDSTACK)
 easynotes.notes.notepad.notebook.privatenotes.note=10569   # EasyNotes v1.3.63.0921 (Modded by @VOIDSTACK)
 com.starii.winkit=20002# Winkit v2.0.2 (Modded by@VOIDSTACK)
+
+com.kiloo.subwaysurf=96750   # Subway Surf 3.70.2 (UNLIMITED MODKIT by @VOIDSTACK)
+com.photoeditor.remakemefaceswapaigenerator=136   # RemakeFace Ai 1.3.2 (Premium Pro Unlocked by @VOIDSTACK)
+com.shallwaystudio.nodevideo=677   # NodeVideo 8.9.2 (Premium Pro by @VOIDSTACK)
+com.imaginstudio.imagetools.pixellab=2026010119   # PixelLab 2.1.9 (Premium by @VOIDSTACK)
+com.kin.easynotes=14   # Easy Notes 1.7-fdroid (Premium Pro by @VOIDSTACK)
+ch.protonvpn.android=605202100   # Proton VPN 5.20.21.0 (Premium Pro by @VOIDSTACK)
+com.biomes.vanced=50681101   # Vanced 5.6.81.101 by @VOIDSTACK
