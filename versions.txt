@@ -20,3 +20,11 @@ com.imaginstudio.imagetools.pixellab=2026010119   # PixelLab 2.1.9 (Premium by @
 com.kin.easynotes=14   # Easy Notes 1.7-fdroid (Premium Pro by @VOIDSTACK)
 ch.protonvpn.android=605202100   # Proton VPN 5.20.21.0 (Premium Pro by @VOIDSTACK)
 com.biomes.vanced=50681101   # Vanced 5.6.81.101 by @VOIDSTACK
+
+com.duolingo=2427   # Duolingo 6.91.4 (Premium Pro by @VOIDSTACK)
+com.truecaller=2627005   # TrueCaller 26.27.5 (Gold by @VOIDSTACK)
+com.alightcreative.motion=100   # Alight Motion 5.0.273.1028425 (Premium by @VOIDSTACK)
+com.dubox.drive=680   # TeraBox 4.23.6 (Premium by @VOIDSTACK)
+com.community.oneroom=50020133   # MovieBox 4.0.03.0930.04 (Premium Pro by @VOIDSTACK)
+com.fourchars.lmpfree=9000443   # LockMyPix 6.1.3 Gemini (Premium by @VOIDSTACK)
+com.camerasideas.instashot=1548   # InShot 2.222.1548 (Premium by @VOIDSTACK)
