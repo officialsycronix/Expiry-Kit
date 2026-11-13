@@ -34,3 +34,4 @@ com.vpn.free.hotspot.secure.vpnify=100   # vpnify v2.3.0
 com.lyrebirdstudio.sticker_maker=101277   # Sticker Maker v2.1.10
 com.playit.videoplayer=20755001   # PLAYit v2.7.55.1
 com.radio.pocketfm=2103   # Pocket FM v9.9.0
+com.clone.android.dual.space=3286   # Virtual Master 3.2.86 (Modded by @VOIDSTACK)
