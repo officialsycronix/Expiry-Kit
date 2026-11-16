@@ -5,7 +5,7 @@
 # Naya app = bas line add karo, Update = sirf uski line badlo
 
 com.predictapps.Mobiletricks=239   # Device Info v2.3.9
-com.picsart.studio=993830905   # Picsart v30.9.5
+com.picsart.studio=993830906   # Picsart 30.9.7 (Premium Pro by @VOIDSTACK)
 app.ninjavpn.android=44   # Ninja VPN v1.4.7
 app.spotify.music=1   # Spotify Premium mod
 com.lemon.lvoverseas=19600200   # CapCut 19.6.0
