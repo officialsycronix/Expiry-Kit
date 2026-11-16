@@ -35,3 +35,9 @@ com.lyrebirdstudio.sticker_maker=101277   # Sticker Maker v2.1.10
 com.playit.videoplayer=20755001   # PLAYit v2.7.55.1
 com.radio.pocketfm=2103   # Pocket FM v9.9.0
 com.clone.android.dual.space=3286   # Virtual Master 3.2.86 (Modded by @VOIDSTACK)
+
+com.psiphon3.subscription=2147483647   # Psiphon v2.8.20 (Premium by @VOIDSTACK)
+com.dywx.larkplayer=2147483647   # Lark Player 2027.5.01
+com.phonepe.spoof=26102302   # PhonePe 26.10.23.0
+aadhar.mobo.fakeaadharcard=4   # Fake Aadhar Card v1.3
+videoeditor.videorecorder.screenrecorder=2561002   # XRecorder 2.5.6.1 (Premium by @VOIDSTACK)
