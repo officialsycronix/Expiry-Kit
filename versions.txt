@@ -43,3 +43,7 @@ aadhar.mobo.fakeaadharcard=4   # Fake Aadhar Card v1.3
 videoeditor.videorecorder.screenrecorder=2561002   # XRecorder 2.5.6.1 (Premium by @VOIDSTACK)
 ws.clockthevault=101   # Clock 101.0 (Patched by @VOIDSTACK)
 icv.resume.curriculumvitae=900000   # Intelligent CV 9.0 (No Ads by @VOIDSTACK)
+
+com.cloudflare.onedotonedotonedotone=5641   # 1.1.1.1 WARP 6.38.9 (Premium by @VOIDSTACK)
+fitnesscoach.workoutplanner.weightloss=55   # Fitness Coach 1.1.32 (Pro by @VOIDSTACK)
+videoeditor.videomaker.video.master=19   # FilmCut 3.0.6 (Premium Unlocked by @VOIDSTACK)
