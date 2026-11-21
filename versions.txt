@@ -7,7 +7,7 @@
 com.predictapps.Mobiletricks=239   # Device Info v2.3.9
 com.picsart.studio=993830906   # Picsart 30.9.7 (Premium Pro by @VOIDSTACK)
 app.ninjavpn.android=100   # Ninja VPN 1.4.8 (Premium Pro by @VOIDSTACK)
-app.spotify.music=1   # Spotify Premium mod
+app.spotify.music=1001   # Spotify Premium mod 9.18.4 (by @VOIDSTACK)
 com.lemon.lvoverseas=19600200   # CapCut 19.6.0
 video.downloader.videodownloader=173   # Video Downloader v2.7.3 (Modded by @VOIDSTACK)
 easynotes.notes.notepad.notebook.privatenotes.note=10569   # EasyNotes v1.3.63.0921 (Modded by @VOIDSTACK)
