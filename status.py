@@ -3,9 +3,12 @@
 Expiry-Kit status — versions.txt ka readable dashboard.
 
 Teen sections:
-  1) RECENT UPDATES — last N din me update hui apps (git blame se), din ke saath
+ 1) RECENT UPDATES — last N din me update hui apps (git blame se), din ke saath
   2) DUE SOON       — 25d+ purani lines (cycle lagbhag khatam, abhi update karo)
   3) OTHER APPS     — bich ka baaki sab
+
+FORCE: versions.txt ke comment me [FORCE] likho to us line pe
+  ⚡FORCE UPDATE tag + fresh 30d timer dikhta hai (sirf display, user ko dialog nahi).
 
 Har line: app name, version, kitne din pehle update hui, cycle ke kitne din bache.
 
@@ -26,6 +29,7 @@ CYCLE = int(os.environ.get("CYCLE", "30"))
 RECENT_DAYS = int(os.environ.get("RECENT_DAYS", "3"))
 DUE_DAYS = int(os.environ.get("DUE_DAYS", "25"))
 PKG_RE = re.compile(r"^([A-Za-z0-9._]+)\s*=\s*(\d+)")
+FORCE_RE = re.compile(r"\s*\[\s*FORCE\s*\]\s*", re.IGNORECASE)
 
 
 def sh(*args: str) -> str:
@@ -55,11 +59,17 @@ def bar(pct: int, width: int = 12) -> str:
 
 
 def row_line(row) -> str:
-    name, pkg, ver, days_i, left, pct = row
+    name, pkg, ver, days_i, left, pct, force = row
     label = (name or pkg)[:22]
     d = f"{days_i}d ago" if days_i >= 0 else "?d ago"
-    l = f"{left}d left"
-    warn = "  ⚠️ UPDATE DUE" if left == 0 else ""
+    if force:
+        # force tracking: timer fresh (sirf display — user ko dialog nahi)
+        l = f"{CYCLE}d left"
+        warn = "  ⚡FORCE UPDATE"
+        pct = 0
+    else:
+        l = f"{left}d left"
+        warn = "  ⚠️ UPDATE DUE" if left == 0 else ""
     return f"  {label:<22} v{ver:<10} {d:>8}  {bar(pct)}  {l}{warn}"
 
 
@@ -106,12 +116,14 @@ def main() -> int:
             continue
         pkg, ver = m.group(1), int(m.group(2))
         name = raw.split("#", 1)[1].strip() if "#" in raw else ""
+        force = bool(FORCE_RE.search(raw))
+        name = FORCE_RE.sub("", name).strip()
         ts = blame.get(idx)
         days = (now.timestamp() - ts) / 86400 if ts else None
         days_i = int(days) if days is not None else -1
         left = max(0, CYCLE - days_i) if days_i >= 0 else CYCLE
         pct = int(100 * days_i / CYCLE) if CYCLE > 0 and days_i >= 0 else 0
-        rows.append((name, pkg, ver, days_i, left, pct))
+        rows.append((name, pkg, ver, days_i, left, pct, force))
 
     # sections — teeno mutually exclusive
     recent = [r for r in rows if 0 <= r[3] <= RECENT_DAYS]
@@ -138,8 +150,10 @@ def main() -> int:
     if not (recent or due or others):
         print("  (versions.txt me koi app line nahi)")
     print("  " + "─" * 66)
+    force_n = sum(1 for r in rows if r[6])
     print(f"  total apps: {len(rows)}   ·   recent: {len(recent)}"
-          f"   ·   due: {len(due)}   ·   file: versions.txt (main)\n")
+          f"   ·   due: {len(due)}   ·   force: {force_n}"
+          f"   ·   file: versions.txt (main)\n")
     return 0
 
 
