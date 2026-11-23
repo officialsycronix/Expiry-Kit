@@ -2,16 +2,18 @@
 """
 Expiry-Kit status — versions.txt ka readable dashboard.
 
-Do sections:
-  1) RECENT UPDATES — jo apps last N din me update hui (git blame se), din ke saath
-  2) OTHER APPS     — baaki sab
+Teen sections:
+  1) RECENT UPDATES — last N din me update hui apps (git blame se), din ke saath
+  2) DUE SOON       — 25d+ purani lines (cycle lagbhag khatam, abhi update karo)
+  3) OTHER APPS     — bich ka baaki sab
 
 Har line: app name, version, kitne din pehle update hui, cycle ke kitne din bache.
 
 Usage:
   python3 status.py
   CYCLE=15 python3 status.py            # custom cycle days
-  RECENT_DAYS=7 python3 status.py       # recent section window (default 3)
+  RECENT_DAYS=7 python3 status.py       # recent window (default 3)
+  DUE_DAYS=25 python3 status.py         # due threshold (default 25, 0 = band)
 """
 
 import os
@@ -22,6 +24,7 @@ from datetime import datetime, timezone
 
 CYCLE = int(os.environ.get("CYCLE", "30"))
 RECENT_DAYS = int(os.environ.get("RECENT_DAYS", "3"))
+DUE_DAYS = int(os.environ.get("DUE_DAYS", "25"))
 PKG_RE = re.compile(r"^([A-Za-z0-9._]+)\s*=\s*(\d+)")
 
 
@@ -110,21 +113,33 @@ def main() -> int:
         pct = int(100 * days_i / CYCLE) if CYCLE > 0 and days_i >= 0 else 0
         rows.append((name, pkg, ver, days_i, left, pct))
 
-    # recent = last RECENT_DAYS din me update hui lines (sabse naya pehle)
+    # sections — teeno mutually exclusive
     recent = [r for r in rows if 0 <= r[3] <= RECENT_DAYS]
-    recent.sort(key=lambda r: (r[3], (r[0] or r[1]).lower()))
-    others = [r for r in rows if not (0 <= r[3] <= RECENT_DAYS)]
-    # purana pehle (urgency), unknown days last
+    due = [r for r in rows if DUE_DAYS > 0 and r[3] >= DUE_DAYS]
+    others = [r for r in rows
+              if not (0 <= r[3] <= RECENT_DAYS) and not (DUE_DAYS > 0 and r[3] >= DUE_DAYS)]
+
+    recent.sort(key=lambda r: (r[3], (r[0] or r[1]).lower()))          # naya pehle
+    due.sort(key=lambda r: (-r[3], (r[0] or r[1]).lower()))            # sabse purana pehle
     others.sort(key=lambda r: (r[3] < 0, -max(r[3], 0), (r[0] or r[1]).lower()))
 
-    print(f"\n  EXPIRY-KIT  ·  today {now:%Y-%m-%d}  ·  cycle {CYCLE}d  ·  recent {RECENT_DAYS}d")
-    print()
-    print_section(f"RECENT UPDATES  ({len(recent)})", recent)
-    print()
-    print_section(f"OTHER APPS  ({len(others)})", others)
+    print(f"\n  EXPIRY-KIT  ·  today {now:%Y-%m-%d}  ·  cycle {CYCLE}d"
+          f"  ·  recent {RECENT_DAYS}d"
+          + (f"  ·  due {DUE_DAYS}d+" if DUE_DAYS > 0 else ""))
+    if recent:
+        print()
+        print_section(f"RECENT UPDATES  ({len(recent)})", recent)
+    if due:
+        print()
+        print_section(f"DUE SOON  ≥{DUE_DAYS}d old  ({len(due)})", due)
+    if others:
+        print()
+        print_section(f"OTHER APPS  ({len(others)})", others)
+    if not (recent or due or others):
+        print("  (versions.txt me koi app line nahi)")
     print("  " + "─" * 66)
-    print(f"  total apps: {len(rows)}   ·   recent (≤{RECENT_DAYS}d): {len(recent)}"
-          f"   ·   file: versions.txt (main)\n")
+    print(f"  total apps: {len(rows)}   ·   recent: {len(recent)}"
+          f"   ·   due: {len(due)}   ·   file: versions.txt (main)\n")
     return 0
 
 
