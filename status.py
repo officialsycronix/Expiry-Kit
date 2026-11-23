@@ -2,14 +2,16 @@
 """
 Expiry-Kit status — versions.txt ka readable dashboard.
 
-Har app line ke liye dikhata hai:
-  - package, version, app name
-  - kitne din pehle line update hui (git blame se)
-  - cycle ke kitne din bache (default 30 din)
+Do sections:
+  1) RECENT UPDATES — jo apps last N din me update hui (git blame se), din ke saath
+  2) OTHER APPS     — baaki sab
 
-Usage (project folder me):
+Har line: app name, version, kitne din pehle update hui, cycle ke kitne din bache.
+
+Usage:
   python3 status.py
-  CYCLE=15 python3 status.py   # custom cycle days
+  CYCLE=15 python3 status.py            # custom cycle days
+  RECENT_DAYS=7 python3 status.py       # recent section window (default 3)
 """
 
 import os
@@ -19,6 +21,7 @@ import sys
 from datetime import datetime, timezone
 
 CYCLE = int(os.environ.get("CYCLE", "30"))
+RECENT_DAYS = int(os.environ.get("RECENT_DAYS", "3"))
 PKG_RE = re.compile(r"^([A-Za-z0-9._]+)\s*=\s*(\d+)")
 
 
@@ -48,11 +51,29 @@ def bar(pct: int, width: int = 12) -> str:
     return "█" * filled + "░" * (width - filled)
 
 
+def row_line(row) -> str:
+    name, pkg, ver, days_i, left, pct = row
+    label = (name or pkg)[:22]
+    d = f"{days_i}d ago" if days_i >= 0 else "?d ago"
+    l = f"{left}d left"
+    warn = "  ⚠️ UPDATE DUE" if left == 0 else ""
+    return f"  {label:<22} v{ver:<10} {d:>8}  {bar(pct)}  {l}{warn}"
+
+
+def print_section(title: str, rows) -> None:
+    print(f"  {title}")
+    print("  " + "─" * 66)
+    if not rows:
+        print("  (koi app nahi)")
+    for r in rows:
+        print(row_line(r))
+
+
 def main() -> int:
     # script chaho repo folder se chalao ya kahin se — khud repo dhundh lega
     here = os.path.dirname(os.path.abspath(__file__))
     repo = here if os.path.isdir(os.path.join(here, ".git")) else \
-        "/data/data/com.termux/files/tmp/opencode/Expiry-Kit"
+        os.path.expanduser("~/tmp/Expiry-Kit")
     if not os.path.isdir(os.path.join(repo, ".git")):
         print("error: Expiry-Kit repo nahi mila")
         return 1
@@ -89,18 +110,21 @@ def main() -> int:
         pct = int(100 * days_i / CYCLE) if CYCLE > 0 and days_i >= 0 else 0
         rows.append((name, pkg, ver, days_i, left, pct))
 
-    print(f"\n  EXPIRY-KIT  ·  today {now:%Y-%m-%d}  ·  cycle {CYCLE}d")
+    # recent = last RECENT_DAYS din me update hui lines (sabse naya pehle)
+    recent = [r for r in rows if 0 <= r[3] <= RECENT_DAYS]
+    recent.sort(key=lambda r: (r[3], (r[0] or r[1]).lower()))
+    others = [r for r in rows if not (0 <= r[3] <= RECENT_DAYS)]
+    # purana pehle (urgency), unknown days last
+    others.sort(key=lambda r: (r[3] < 0, -max(r[3], 0), (r[0] or r[1]).lower()))
+
+    print(f"\n  EXPIRY-KIT  ·  today {now:%Y-%m-%d}  ·  cycle {CYCLE}d  ·  recent {RECENT_DAYS}d")
+    print()
+    print_section(f"RECENT UPDATES  ({len(recent)})", recent)
+    print()
+    print_section(f"OTHER APPS  ({len(others)})", others)
     print("  " + "─" * 66)
-    if not rows:
-        print("  (versions.txt me koi app line nahi)")
-    for name, pkg, ver, days_i, left, pct in rows:
-        label = (name or pkg)[:22]
-        d = f"{days_i}d ago" if days_i >= 0 else "?d ago"
-        l = f"{left}d left"
-        warn = "  ⚠️ UPDATE DUE" if left == 0 else ""
-        print(f"  {label:<22} v{ver:<10} {d:>8}  {bar(pct)}  {l}{warn}")
-    print("  " + "─" * 66)
-    print(f"  total apps: {len(rows)}   ·   file: versions.txt (main)\n")
+    print(f"  total apps: {len(rows)}   ·   recent (≤{RECENT_DAYS}d): {len(recent)}"
+          f"   ·   file: versions.txt (main)\n")
     return 0
 
 
