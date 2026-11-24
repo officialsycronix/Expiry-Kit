@@ -22,7 +22,7 @@ ch.protonvpn.android=605202100   # Proton VPN 5.20.21.0 (Premium Pro by @VOIDSTA
 com.biomes.vanced=50681101   # Vanced 5.6.81.101 by @VOIDSTACK
 
 com.duolingo=2427   # Duolingo 6.91.4 (Premium Pro by @VOIDSTACK)
-com.truecaller=2627005   # TrueCaller 26.27.5 (Gold by @VOIDSTACK)
+com.truecaller=2627010   # TrueCaller 26.27.5 Gold Unlocked (Mod by @VOIDSTACK)
 com.alightcreative.motion=100   # Alight Motion 5.0.273.1028425 (Premium by @VOIDSTACK)
 com.dubox.drive=680   # TeraBox 4.23.6 (Premium by @VOIDSTACK)
 com.community.oneroom=50020133   # MovieBox Patched (Premium) VOID_FIXED [FORCE]
