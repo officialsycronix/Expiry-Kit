@@ -54,3 +54,4 @@ com.cutewallpaperstudio.thumbnail.creater.banner.maker=500   # Banners4U 5.0.8 (
 com.kitegames.blur.photo=79   # Blur Photo 8.0 (Premium Unlocked by @VOIDSTACK)
 com.adobe.lrmobile=711105310   # Lightroom 11.5.31 (Premium Unlocked by @VOID)
 homeworkout.homeworkouts.noequipment=156   # Home Workout 1.8.2 (Pro by @VOIDSTACK)
+com.lemon.lvoverseas=19600201   # CapCut 19.7.0 [All fixed] (Mod by @VOIDSTACK)
